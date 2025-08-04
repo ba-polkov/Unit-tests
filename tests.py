@@ -29,14 +29,14 @@ class TestBooksCollector:
         collector = BooksCollector()
         book_name = "A"*40
         collector.add_new_book(book_name)
-        assert book_name in collector.get_book_genre()
+        assert book_name in collector.get_books_genre()
 
     def test_add_new_book_invalid_name_lenght(self):
         """Добваление книги с некорректной длинной названия"""
         collector = BooksCollector()
         long_name = "A"*41
         collector.add_new_book(long_name)
-        assert long_name in collector.get_book_genre()
+        assert long_name not in collector.get_books_genre()
 
     def test_add_new_book_empty_name_not_add (self):
         """Добавление книги с пустым названием"""
@@ -51,7 +51,7 @@ class TestBooksCollector:
         genre = "Фантастика"
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
-        assert collector.get_books_genre(book_name) == genre
+        assert collector.get_book_genre(book_name) == genre
 
     def test_get_book_genre_book_without_genree(self):
         """Проверка возврата пустой сроки при добавлении книги без жанра"""
@@ -84,31 +84,31 @@ class TestBooksCollector:
         collector.add_new_book ("Книга ужасов")
         collector.add_new_book ("Книга детектив")
 
-        collector.set_book_genre("Книга для детей", "Детская")
+        collector.set_book_genre("Книга для детей", "Мультфильмы")
         collector.set_book_genre("Книга ужасов", "Ужасы")
         collector.set_book_genre("Книга детектив", "Детективы")
 
         children_books = collector.get_books_for_children()
 
         assert "Книга для детей" in children_books
-        assert "Книга ужасов" in children_books
-        assert "Книга детектив" in children_books
+        assert "Книга ужасов" not in children_books
+        assert "Книга детектив" not in children_books
 
     def test_get_books_genre_return_dict(self):
         """Проверка что метод возвращает словарь"""
         collector = BooksCollector()
         collector.add_new_book("Тестовая книга")
-        books_genre = collector.get_book_genre()
+        books_genre = collector.get_books_genre()
         assert isinstance (books_genre, dict)
 
-    def test_add_and_delete_books_from_favorites():
+    def test_add_and_delete_books_from_favorites(self):
         """Проверка добавления и удаления книг в Избранное"""
         collector = BooksCollector()
         book_favorites = "Тестовая книга"
         collector.add_new_book(book_favorites)
 
-        collector.add_book_in_favorite(book_favorites)
+        collector.add_book_in_favorites(book_favorites)
         assert book_favorites in collector.get_list_of_favorites_books()
 
         collector.delete_book_from_favorites(book_favorites)
-        assert book_favorites not in collector.add_book_in_favorites()
+        assert book_favorites not in collector.get_list_of_favorites_books()
