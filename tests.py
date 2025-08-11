@@ -2,17 +2,27 @@ import pytest
 from main import BooksCollector
 
 class TestBooksCollector:
-
-    @pytest.fixture
-    def collector(self):
-            return BooksCollector()
   
-    def test_add_new_book_add_two_books(self, collector):
+    def test_add_new_book_add_two_books(self):
+        collector = BooksCollector()
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
         assert len(collector.get_books_genre()) == 2
 
-
+    @pytest.mark.parametrize("book_name, except_result", [
+        ("A"*40, True),
+        ("", False),
+        ("A"*41, False)
+    ])
+    def test_add_new_book_validation_name(self, book_name, except_result):
+        """Проверка валидности имени книги через параметризацию"""
+        collector = BooksCollector()
+        collector.add_new_book(book_name)
+        if except_result:
+            assert book_name in collector.get_books_genre()
+        else:
+            assert book_name not in collector.get_books_genre()
+        
     # тест для add_new_book
     def test_add_new_book_valid_name_length(self, collector):
         """Добавление книги с корректной длинной названия"""
